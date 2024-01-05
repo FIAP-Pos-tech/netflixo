@@ -9,19 +9,13 @@ import java.time.LocalDateTime;
 @Document
 public class Video {
 
-    @Id @Field
+    @Id
     private String id;
-    @Field
     private String title;
-    @Field
     private String description;
-    @Field
     private String url;
-    @Field
     private String category;
-    @Field(name = "thumbnail_url")
     private String thumbnailUrl;
-    @Field
     private LocalDateTime publicationDate;
 
     public String getId() {

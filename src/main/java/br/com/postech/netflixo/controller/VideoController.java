@@ -1,14 +1,10 @@
 package br.com.postech.netflixo.controller;
 
-import br.com.postech.netflixo.domain.response.VideoResponse;
+import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.service.VideoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/videos")
@@ -20,10 +16,22 @@ public class VideoController {
 		this.videoService = videoService;
 	}
 
+	@PostMapping
+	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
+
+		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
+
+		return output;
+	}
+
 	@GetMapping
-	public DeferredResult<ResponseEntity<List<VideoResponse>>> getVideos() {
-		
-		return null;
+	public DeferredResult<ResponseEntity<?>> getVideos() {
+
+		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+		output.setResult(ResponseEntity.ok(videoService.getVideos()));
+
+		return output;
 	}
 
 }
