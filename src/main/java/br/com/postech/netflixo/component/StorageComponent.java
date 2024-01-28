@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class StorageComponent {
                 .getService();
     }
 
-    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) throws Exception {
+    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) {
         List<BlobId> blobIds = splitAndUploadChunks(file, targetName, maxChunkSizeInMB, storage);
 
         log.info("Composing chunks into {}", targetName);
@@ -48,18 +49,22 @@ public class StorageComponent {
         blobIds.forEach(storage::delete);
     }
 
-    private List<BlobId> splitAndUploadChunks(final File file, String targetName, int maxChunkSizeInMB, Storage storage) throws IOException {
+    private List<BlobId> splitAndUploadChunks(final File file, String targetName, int maxChunkSizeInMB, Storage storage) {
         List<BlobId> blobIds = new ArrayList<>();
         byte[] buffer = new byte[(1024 * 1024) * maxChunkSizeInMB]; // 1MB por chunk
         int bytesRead;
         int chunkIndex = 0;
-        FileInputStream fis = new FileInputStream(file);
-        while ((bytesRead = fis.read(buffer)) != -1) {
-            BlobInfo blobInfo = uploadChunk(targetName, storage, chunkIndex, buffer, bytesRead);
-            blobIds.add(blobInfo.getBlobId());
-            chunkIndex++;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                BlobInfo blobInfo = uploadChunk(targetName, storage, chunkIndex, buffer, bytesRead);
+                blobIds.add(blobInfo.getBlobId());
+                chunkIndex++;
+            }
+            fis.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        fis.close();
         return blobIds;
     }
 

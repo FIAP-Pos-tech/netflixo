@@ -18,6 +18,7 @@ import java.nio.file.Files;
 @Service
 public class VideoService {
 
+    private static final int MAX_CHUNK_SIZE = 1024 * 1024 * 100;
     private final VideoRepository videoRepository;
     private StorageComponent storageComponent;
 
@@ -26,7 +27,7 @@ public class VideoService {
     }
 
     public Flux<Video> getVideos() {
-       return videoRepository.findAll();
+        return videoRepository.findAll();
     }
 
     public Mono<Video> createVideo(Video video) {
@@ -55,5 +56,18 @@ public class VideoService {
             storageComponent = new StorageComponent("bucketName", "projectId");
         }
         return storageComponent;
+    }
+
+    public void uploadVideoContent(String id, byte[] content) {
+        Mono<Video> videoMono = videoRepository.findById(id);
+        Video video = videoMono.block();
+        try {
+            File file = File.createTempFile("video", ".mp4");
+            Files.write(file.toPath(), content);
+            getStorageComponent()
+                    .uploadFileChunked(file, String.format("%s/%s.mp4", video.getCategory(), video.getId()), MAX_CHUNK_SIZE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
