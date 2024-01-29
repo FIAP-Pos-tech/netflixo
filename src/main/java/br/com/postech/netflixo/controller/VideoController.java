@@ -28,7 +28,7 @@ public class VideoController {
     @GetMapping("/{title}")
     public DeferredResult<ResponseEntity<?>> listVideosByTitle(@PathVariable String title) {
         DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
-        output.setResult(ResponseEntity.ok(videoService.getVideos()));
+        output.setResult(ResponseEntity.ok(videoService.findVideoByTitle(title)));
 
         return output;
     }

@@ -93,7 +93,6 @@ public class StorageComponent {
         log.info("downloaded blob to temp file");
 
 
-//        get bytes from tempFile
         byte[] bytes = Files.readAllBytes(tempFile.toPath());
 
         log.info("read bytes from temp file");
