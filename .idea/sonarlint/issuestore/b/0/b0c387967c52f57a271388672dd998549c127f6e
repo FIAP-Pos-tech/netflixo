@@ -1,12 +1,0 @@
-
-a	java:S112$"FDefine and throw a dedicated exception instead of using a generic one.(¶’Y8¯û—–Õ1
-o
-java:S20956"MUse try-with-resources or close this "FileInputStream" in a "finally" clause.(¾¡½ßÿÿÿÿÿ8Ìû—–Õ1
-“
-java:S1130"qRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from constructor's body.(‚³ƒüÿÿÿÿ8Ñû—–Õ1
-J
-java:S1611*"4Remove the parentheses around the "blobId" parameter(‹€”î
-ˆ
-java:S1130K"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(É 8Øû—–Õ1
-L
-java:S1144f"1Remove this unused private "setUpHeaders" method.(Áğø¦ıÿÿÿÿ
