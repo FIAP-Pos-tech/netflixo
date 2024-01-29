@@ -2,6 +2,8 @@ package br.com.postech.netflixo.service;
 
 import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.domain.repository.VideoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -20,8 +22,8 @@ public class VideoService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Flux<Video> getVideos() {
-       return videoRepository.findAll();
+    public Page<Video> getVideos(Pageable pageable) {
+        return videoRepository.findAll(pageable);
     }
 
     public Mono<Video> createVideo(Video video) {
