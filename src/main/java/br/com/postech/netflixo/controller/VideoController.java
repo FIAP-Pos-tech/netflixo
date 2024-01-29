@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,17 +39,20 @@ public class VideoController {
 
 	@PostMapping
 	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
-
 		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
 		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
 
 		return output;
 	}
 
-	@GetMapping
-	public Page<Video> getVideos(@PageableDefault(size = 5) Pageable pageable) {
-		return videoService.getVideos(pageable);
+	@GetMapping("/{title}")
+	public DeferredResult<ResponseEntity<?>> listVideosByTitle(@PathVariable String title) {
+		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+		output.setResult(ResponseEntity.ok(videoService.findVideoByTitle(title)));
+
+		return output;
 	}
+
 
 	@GetMapping(value = "{uuid}", produces = "video/mp4")
 	public Flux<DataBuffer> streamVideo(@PathVariable String uuid,
