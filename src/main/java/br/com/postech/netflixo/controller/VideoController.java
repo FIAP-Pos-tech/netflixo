@@ -32,20 +32,12 @@ public class VideoController {
 		this.videoService = videoService;
 	}
 
-	@PostMapping
-	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
-		log.info("Criando vídeo {}", video);
+	@GetMapping("/{category}")
+	public DeferredResult<ResponseEntity<?>> listVideosByCategory(@PathVariable String category,
+																  @RequestParam(defaultValue = "0") int page,
+																  @RequestParam("5") int size) {
 		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
-		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
-
-		return output;
-	}
-
-	@GetMapping("/{title}")
-	public DeferredResult<ResponseEntity<?>> listVideosByTitle(@PathVariable String title) {
-		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
-		output.setResult(ResponseEntity.ok(videoService.findVideoByTitle(title)));
-
+		output.setResult(ResponseEntity.ok(videoService.findVideoByCategory(category, page, size)));
 		return output;
 	}
 
@@ -63,6 +55,15 @@ public class VideoController {
 			log.error("Erro ao fazer streaming do vídeo", e);
 			return Flux.error(e);
 		}
+	}
+
+	@PostMapping
+	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
+		log.info("Criando vídeo {}", video);
+		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
+		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
+
+		return output;
 	}
 
 	@PostMapping("/upload")

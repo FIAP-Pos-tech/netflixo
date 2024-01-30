@@ -1,12 +1,12 @@
 package br.com.postech.netflixo.service;
 
 import br.com.postech.netflixo.component.StorageComponent;
-import br.com.postech.netflixo.controller.VideoController;
 import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.domain.repository.VideoRepository;
 import com.google.cloud.storage.Blob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -36,6 +36,13 @@ public class VideoService {
         this.mongoTemplate = mongoTemplate;
     }
 
+    private StorageComponent getStorageComponent() {
+        if (storageComponent == null) {
+            storageComponent = new StorageComponent("bucketName", "projectId");
+        }
+        return storageComponent;
+    }
+
     public Flux<Video> getVideos(Pageable pageable) {
         Query query = new Query().with(pageable);
         return mongoTemplate.find(query, Video.class);
@@ -60,8 +67,8 @@ public class VideoService {
         }
     }
 
-    public Flux<Video> findVideoByTitle(String title) {
-        return videoRepository.findByTitle(title);
+    public Flux<Video> findVideoByCategory(String category, int page, int size) {
+        return videoRepository.findByCategory(category, PageRequest.of(page, size));
     }
 
     public Mono<byte[]> getVideoContentById(String id) {
@@ -75,13 +82,6 @@ public class VideoService {
         } catch (IOException e) {
             return Mono.error(e);
         }
-    }
-
-    private StorageComponent getStorageComponent() {
-        if (storageComponent == null) {
-            storageComponent = new StorageComponent("bucketName", "projectId");
-        }
-        return storageComponent;
     }
 
     public void uploadVideoContent(String id, byte[] content) {
