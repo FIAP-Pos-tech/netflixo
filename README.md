@@ -15,9 +15,9 @@ A aplicação, por sua vez, permite o gerenciamento e a exibição de vídeos, c
         - `GET /videos/{category}` Lista todos os vídeos por categoria.
 
 2. **Campos obrigatórios no corpo da requisição para `POST`**
-   -categoria
-   -título
-   -descrição
+   - categoria
+   - título
+   - descrição
   
 3. **Listagem paginada.**
     - Endpoint: `GET /videos/{category}?page=0&size=5`
