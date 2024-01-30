@@ -2,19 +2,18 @@ package br.com.postech.netflixo.domain.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
-@Document
+@Document(collection = "videos")
 public class Video {
 
     @Id
     private String id;
     private String title;
+    private String category;
     private String description;
     private String url;
-    private String category;
     private String thumbnailUrl;
     private LocalDateTime publicationDate;
 

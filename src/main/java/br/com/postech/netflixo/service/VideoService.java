@@ -1,23 +1,31 @@
 package br.com.postech.netflixo.service;
 
 import br.com.postech.netflixo.component.StorageComponent;
+import br.com.postech.netflixo.controller.VideoController;
 import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.domain.repository.VideoRepository;
 import com.google.cloud.storage.Blob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class VideoService {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoService.class);
     private static final int MAX_CHUNK_SIZE = 1024 * 1024 * 100;
     private final VideoRepository videoRepository;
     private StorageComponent storageComponent;
@@ -33,8 +41,23 @@ public class VideoService {
         return mongoTemplate.find(query, Video.class);
     }
 
+    @Transactional
     public Mono<Video> createVideo(Video video) {
-        return videoRepository.save(video);
+        video.setId(UUID.randomUUID().toString());
+        if (Objects.isNull(video.getUrl())) {
+            video.setUrl(String.format("https://storage.googleapis.com/netflixo-videos/%s/%s.mp4", video.getCategory(), video.getId()));
+        }
+        if (Objects.isNull(video.getPublicationDate())) {
+            video.setPublicationDate(LocalDateTime.now());
+        }
+        try {
+            Mono<Video> savedVideo = videoRepository.save(video);
+            log.info("Saved video: {}", savedVideo.block());
+            return savedVideo;
+        } catch (Exception e) {
+            log.error("Failed to save video", e);
+            return Mono.error(e);
+        }
     }
 
     public Flux<Video> findVideoByTitle(String title) {

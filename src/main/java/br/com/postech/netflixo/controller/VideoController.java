@@ -25,7 +25,7 @@ public class VideoController {
 
 	private static final Logger log = LoggerFactory.getLogger(VideoController.class);
 
-	private StorageComponent storageComponent;
+	private final StorageComponent storageComponent;
 
 	public VideoController(VideoService videoService) throws IOException {
 		this.storageComponent = new StorageComponent("netflixo-videos", "netflixo-410521");
@@ -34,6 +34,7 @@ public class VideoController {
 
 	@PostMapping
 	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
+		log.info("Criando vídeo {}", video);
 		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
 		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
 
@@ -47,7 +48,6 @@ public class VideoController {
 
 		return output;
 	}
-
 
 	@GetMapping(value = "{uuid}", produces = "video/mp4")
 	public Flux<DataBuffer> streamVideo(@PathVariable String uuid,
