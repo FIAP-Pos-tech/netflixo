@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -66,20 +67,16 @@ public class VideoController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadChunk(
-			@RequestParam("chunk") MultipartFile chunk,
-			@RequestParam("chunkIndex") int chunkIndex,
-			@RequestParam("chunks") int chunks,
+			@RequestParam("file") MultipartFile file,
 			@RequestParam("fileName") String fileName) throws Exception {
 
 		String tempDir = System.getProperty("java.io.tmpdir");
-		File tempFile = new File(tempDir + File.separator + fileName + "-" + chunkIndex);
-		chunk.transferTo(tempFile);
+		File tempFile = new File(tempDir + File.separator + fileName);
+		file.transferTo(tempFile);
 
-		log.info("Chunk {} de {} recebido", chunkIndex, chunks);
+		log.info("arquivo recebido {} ", fileName);
 
-		storageComponent.uploadFileChunked(tempFile, fileName, chunks);
+		storageComponent.uploadFileChunked(tempFile, fileName.replace(" ", ""), 100);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
-
 }
