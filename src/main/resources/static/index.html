@@ -18,20 +18,26 @@
         </div>
     </div>
     <div class="row mt-5">
-        <div class="col-md-6"> <br>
+        <div class="col-md-6"><br>
             <form id="uploadForm" class="row g-3">
-                <select id="categoria" class="form-select" aria-label="Selecione a categoria">
-                    <option selected value="Adultos">Putaria</option>
-                    <option value="acao">Ação</option>
-                    <option value="romance">Romance</option>
-                    <option value="aventura">Aventura</option>
-                    <option value="guerra">Guerra</option>
-                    <option value="policial">Policial</option>
-                    <option value="desenho">Desenho</option>
-                    <option value="ciencia">Ciencia</option>
-                    <option value="drama">Drama</option>
-                </select>
-                <input type="text" id="titulo" class="form-control" placeholder="Titulo do Video" />
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <select id="categoria" class="form-select" aria-label="Selecione a categoria">
+                        <option selected value="adulto">Adulto</option>
+                        <option selected value="acao">Ação</option>
+                        <option value="romance">Romance</option>
+                        <option value="aventura">Aventura</option>
+                        <option value="guerra">Guerra</option>
+                        <option value="policial">Policial</option>
+                        <option value="desenho">Desenho</option>
+                        <option value="ciencia">Ciencia</option>
+                        <option value="drama">Drama</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Titulo</label>
+                    <input type="text" id="titulo" class="form-control" placeholder="Titulo do Video"/>
+                </div>
                 <div class="mb-3">
                     <label for="descricao" class="form-label">Descrição</label>
                     <textarea class="form-control" id="descricao" rows="3"></textarea>
