@@ -48,7 +48,6 @@ public class VideoService {
         return mongoTemplate.find(query, Video.class);
     }
 
-    @Transactional
     public Mono<Video> createVideo(Video video) {
         video.setId(UUID.randomUUID().toString());
         if (Objects.isNull(video.getUrl())) {
@@ -58,9 +57,7 @@ public class VideoService {
             video.setPublicationDate(LocalDateTime.now());
         }
         try {
-            Mono<Video> savedVideo = videoRepository.save(video);
-            log.info("Saved video: {}", savedVideo.block());
-            return savedVideo;
+            return videoRepository.save(video);
         } catch (Exception e) {
             log.error("Failed to save video", e);
             return Mono.error(e);

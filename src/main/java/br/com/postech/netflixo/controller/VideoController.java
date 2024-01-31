@@ -3,6 +3,7 @@ package br.com.postech.netflixo.controller;
 import br.com.postech.netflixo.component.StorageComponent;
 import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.service.VideoService;
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -15,6 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,11 +62,15 @@ public class VideoController {
 
 
 	@PostMapping
-	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
+	public DeferredResult<ResponseEntity<Video>> createVideo(@RequestBody Video video) throws InterruptedException {
 		log.info("Criando vídeo {}", video);
-		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
-		output.setResult(ResponseEntity.ok(videoService.createVideo(video)));
-
+		DeferredResult<ResponseEntity<Video>> output = new DeferredResult<>();
+		Mono<Video> monoVideo = videoService.createVideo(video);
+		monoVideo.doOnSuccess(v -> {
+			log.info("Vídeo criado {}", v);
+			output.setResult(ResponseEntity.ok(v));
+		});
+		log.info("result criado {}", output.getResult());
 		return output;
 	}
 
@@ -79,7 +85,7 @@ public class VideoController {
 
 		log.info("arquivo recebido {} ", fileName);
 
-		storageComponent.uploadFileChunked(tempFile, fileName.replace(" ", ""), 100);
+		videoService.uploadVideoContent(fileName, Files.toByteArray(tempFile));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
