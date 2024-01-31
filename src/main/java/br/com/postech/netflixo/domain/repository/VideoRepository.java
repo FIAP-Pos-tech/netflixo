@@ -9,5 +9,5 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface VideoRepository extends ReactiveMongoRepository<Video, String> {
-    Flux<Video> findByCategory(String category, Pageable pageable);
+    Flux<Video> findByTitle(String title);
 }
