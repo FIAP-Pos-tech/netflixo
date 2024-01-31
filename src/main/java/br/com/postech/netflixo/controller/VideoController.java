@@ -1,5 +1,6 @@
 package br.com.postech.netflixo.controller;
 
+import br.com.postech.netflixo.component.StorageComponent;
 import br.com.postech.netflixo.domain.entity.Video;
 import br.com.postech.netflixo.service.VideoService;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 
 import java.io.File;
@@ -27,15 +29,15 @@ public class VideoController {
 
 	private final StorageComponent storageComponent;
 
-	public VideoController(VideoService videoService) throws IOException {
+	public VideoController(VideoService videoService) {
 		this.storageComponent = new StorageComponent("netflixo-videos", "netflixo-410521");
 		this.videoService = videoService;
 	}
 
-	@GetMapping("/{category}")
+	@GetMapping("/category/{category}")
 	public DeferredResult<ResponseEntity<?>> listVideosByCategory(@PathVariable String category,
 																  @RequestParam(defaultValue = "0") int page,
-																  @RequestParam("5") int size) {
+																  @RequestParam(defaultValue = "5") int size) {
 		DeferredResult<ResponseEntity<?>> output = new DeferredResult<>();
 		output.setResult(ResponseEntity.ok(videoService.findVideoByCategory(category, page, size)));
 		return output;
@@ -44,18 +46,18 @@ public class VideoController {
 	@GetMapping(value = "{uuid}", produces = "video/mp4")
 	public Flux<DataBuffer> streamVideo(@PathVariable String uuid,
 										@RequestHeader("Range") String range,
-										ServerHttpRequest request,
-										ServerHttpResponse response) {
+										ServerWebExchange exchange) {
 		try {
 			// Realiza o streaming do vídeo
 			log.info("range: {}", range);
-			return storageComponent.downloadFileStreaming(uuid, response);
+			return storageComponent.downloadFileStreaming(uuid, exchange.getResponse());
 		} catch (Exception e) {
 			// Trate a exceção conforme necessário
 			log.error("Erro ao fazer streaming do vídeo", e);
 			return Flux.error(e);
 		}
 	}
+
 
 	@PostMapping
 	public DeferredResult<ResponseEntity<?>> createVideo(@RequestBody Video video) {
