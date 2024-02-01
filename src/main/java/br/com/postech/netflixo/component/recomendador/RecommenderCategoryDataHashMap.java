@@ -1,4 +1,4 @@
-package br.com.postech.netflixo.recommender.data;
+package br.com.postech.netflixo.component.recomendador;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -17,15 +17,14 @@ import br.com.postech.netflixo.service.RecommenderService;
 @RequestMapping("/recomenda")
 public class RecomendaFilmesController {
 
-	
 	private final RecommenderService recommenderService;
 	
 	public RecomendaFilmesController(RecommenderService recommenderService) {
 		this.recommenderService = recommenderService;
 	}
-		
+
 	@GetMapping("/{id}")
-	public ResponseEntity<RecommenderResponse> buscarConsumoPorId(@PathVariable Long id) throws IOException, TasteException { //throws ConsumoNotFoundException {
+	public ResponseEntity<RecommenderResponse> buscarConsumoPorId(@PathVariable Long id) throws IOException, TasteException {
 		return ResponseEntity.ok(recommenderService.createRecommenderVideo(id));
 	}
 }

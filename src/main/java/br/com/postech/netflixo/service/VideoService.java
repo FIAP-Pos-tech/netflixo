@@ -73,4 +73,9 @@ public class VideoService {
             throw new RuntimeException(e);
         }
     }
+
+    public Object findVideoByCategory(String category, int page, int size) {
+        return null;
+    }
+
 }

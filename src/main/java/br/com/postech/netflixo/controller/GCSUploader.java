@@ -1,5 +1,6 @@
 package br.com.postech.netflixo.controller;
 
+import br.com.postech.netflixo.component.StorageComponent;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;

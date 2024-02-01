@@ -1,4 +1,4 @@
-package br.com.postech.netflixo.recomendadorbuilder.data;
+package br.com.postech.netflixo.component.recomendador;
 
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
@@ -17,8 +17,8 @@ public class RecomendadorBuilder implements RecommenderBuilder{
 	        
 	        UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
 	        UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
-	        UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
-	        return recommender;
+
+		 return new GenericUserBasedRecommender(model, neighborhood, similarity);
 	    }
 
 }
