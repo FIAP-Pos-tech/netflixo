@@ -1,7 +1,6 @@
 package br.com.postech.netflixo.component.recomendador;
 
 import br.com.postech.netflixo.domain.entity.RecommenderFilm;
-import br.com.postech.netflixo.component.recomendador.RecomendadorBuilder;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
