@@ -89,7 +89,7 @@ public class VideoService {
             Files.write(file.toPath(), content);
             getStorageComponent()
                     .uploadFileChunked(file, String.format("%s/%s.mp4", video.getCategory(), video.getId()), MAX_CHUNK_SIZE);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

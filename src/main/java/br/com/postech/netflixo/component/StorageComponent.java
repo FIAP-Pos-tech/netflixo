@@ -37,8 +37,8 @@ public class StorageComponent {
                 .getService();
     }
 
-    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) {
-        List<BlobId> blobIds = splitAndUploadChunks(file, targetName, maxChunkSizeInMB, storage);
+    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) throws Exception {
+        List<BlobId> blobIds = splitAndUploadChunks(file, String.format("%s.mp4" ,targetName), maxChunkSizeInMB, storage);
 
         log.info("Composing chunks into {}", targetName);
         Storage.ComposeRequest.Builder composeBuilder = Storage.ComposeRequest.newBuilder();
@@ -47,8 +47,6 @@ public class StorageComponent {
 
         storage.compose(composeBuilder.build());
 
-        // Seria interessante deletar os chunks após o compose?
-        // Ou deixar para fazer o download dos chunks e montar dps a partir deles?
         blobIds.forEach(storage::delete);
     }
 
