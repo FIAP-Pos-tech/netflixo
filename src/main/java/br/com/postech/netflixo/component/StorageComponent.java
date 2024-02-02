@@ -38,7 +38,7 @@ public class StorageComponent {
     }
 
     public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) throws Exception {
-        List<BlobId> blobIds = splitAndUploadChunks(file, targetName, maxChunkSizeInMB, storage);
+        List<BlobId> blobIds = splitAndUploadChunks(file, String.format("%s.mp4" ,targetName), maxChunkSizeInMB, storage);
 
         log.info("Composing chunks into {}", targetName);
         Storage.ComposeRequest.Builder composeBuilder = Storage.ComposeRequest.newBuilder();
