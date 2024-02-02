@@ -37,7 +37,7 @@ public class StorageComponent {
                 .getService();
     }
 
-    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) {
+    public void uploadFileChunked(final File file, String targetName, int maxChunkSizeInMB) throws Exception {
         List<BlobId> blobIds = splitAndUploadChunks(file, targetName, maxChunkSizeInMB, storage);
 
         log.info("Composing chunks into {}", targetName);
@@ -47,8 +47,6 @@ public class StorageComponent {
 
         storage.compose(composeBuilder.build());
 
-        // Seria interessante deletar os chunks após o compose?
-        // Ou deixar para fazer o download dos chunks e montar dps a partir deles?
         blobIds.forEach(storage::delete);
     }
 

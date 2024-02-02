@@ -79,13 +79,15 @@ public class VideoController {
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("fileName") String fileName) throws Exception {
 
+		log.info("Received file with name: {}", fileName);
+
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File tempFile = new File(tempDir + File.separator + fileName);
 		file.transferTo(tempFile);
 
-		log.info("arquivo recebido {} ", fileName);
+		log.info("arquivo salvo no diretorio: {}", tempFile.getAbsolutePath());
 
-		videoService.uploadVideoContent(fileName, Files.toByteArray(tempFile));
+		storageComponent.uploadFileChunked(tempFile, fileName.replace(" ", ""), 100);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

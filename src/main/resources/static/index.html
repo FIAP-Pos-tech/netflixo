@@ -7,6 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
+    <style>
+        body {
+            padding: 25px;
+            background-color: white;
+            color: black;
+            font-size: 25px;
+        }
+
+        .dark-mode {
+            background-color: darkslategray;
+            color: white;
+        }
+
+    </style>
+
+
     <title>Netflixo Video streaming</title>
 </head>
 <body>
@@ -14,9 +30,10 @@
     <h2>Netflixo papai</h2>
     <div class="row">
         <div class="col-md-6">
-            <video src="videos/MUSICA-NETFLIX" width="100%" height="440px" controls></video>
+            <video src="videos/Rep.ClosetGigantecomSpa,Adegapara3milrótulos,PiscinanaSala,Aptode1000m2Inacreditável!(720p)" width="100%" height="440px" controls></video>
         </div>
     </div>
+
     <div class="row mt-5">
         <div class="col-md-6"><br>
             <form id="uploadForm" class="row g-3">
@@ -43,7 +60,7 @@
                     <textarea class="form-control" id="descricao" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="videoFile" class="form-label" style="color: white">Default file input example</label>
+                    <label for="videoFile" class="form-label" style="color: white">file input example</label>
                     <input type="file" id="videoFile" class="form-control" accept="video/*">
                 </div>
                 <button type="submit" class="btn btn-primary">Upload</button>
@@ -51,42 +68,55 @@
         </div>
     </div>
 </div>
-<!-- ... -->
+
+<br> <button onclick="darkMode()">Botão dark mode</button>
+
 <script>
+
+    // document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    //     e.preventDefault();
+    //     let video = {}
+    //     video.category = document.getElementById("categoria").value;
+    //     video.title = document.getElementById("titulo").value;
+    //     video.description = document.getElementById("descricao").value;
+    //
+    //     fetch('videos', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(video)
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(function(data) {
+    //         console.log(data);
+    //     }).catch(function(error) {
+    //         console.log(error);
+    //     });
+    //
+    //
+    // });
+
+
     document.getElementById('uploadForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        let video = {}
-        video.category = document.getElementById("categoria").value;
-        video.title = document.getElementById("titulo").value;
-        video.description = document.getElementById("descricao").value;
-
-        fetch('videos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(video)
-        }).then(function(response) {
-            return response.json();
-        }).then(function(data) {
-            console.log(data);
-        }).catch(function(error) {
-            console.log(error);
-        });
-
-        // uploadFile();
-    });
-
-    function uploadFile(data) {
         var file = document.getElementById('videoFile').files[0];
+        console.log('File:', file);
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('fileName', data.id);
+        formData.append('fileName', file.name);
+        console.log('FormData:', formData);
         fetch('videos/upload', {
             method: 'POST',
             body: formData
         });
+    });
+
+    function darkMode() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
     }
+
 </script>
 </body>
 </html>
