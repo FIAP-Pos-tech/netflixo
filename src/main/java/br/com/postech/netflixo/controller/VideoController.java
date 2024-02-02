@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
@@ -66,26 +67,31 @@ public class VideoController {
 		log.info("Criando vídeo {}", video);
 		DeferredResult<ResponseEntity<Video>> output = new DeferredResult<>();
 		Mono<Video> monoVideo = videoService.createVideo(video);
-		monoVideo.doOnSuccess(v -> {
+		monoVideo.subscribe(v -> {
 			log.info("Vídeo criado {}", v);
 			output.setResult(ResponseEntity.ok(v));
 		});
+		Thread.sleep(1000);
 		log.info("result criado {}", output.getResult());
 		return output;
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<?> uploadChunk(
-			@RequestParam("file") MultipartFile file,
-			@RequestParam("fileName") String fileName) throws Exception {
+	public Mono<ResponseEntity<?>> uploadChunk(
+			@RequestPart("file") FilePart file,
+			@RequestPart("fileName") String fileName) throws Exception {
+
+		log.info("Received file with name: {}", fileName);
 
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File tempFile = new File(tempDir + File.separator + fileName);
-		file.transferTo(tempFile);
 
-		log.info("arquivo recebido {} ", fileName);
 
-		videoService.uploadVideoContent(fileName, Files.toByteArray(tempFile));
-		return new ResponseEntity<>(HttpStatus.OK);
+		file.transferTo(tempFile).block();
+
+		log.info("File saved in directory: {}", tempFile.getAbsolutePath());
+
+		storageComponent.uploadFileChunked(tempFile, fileName, 100);
+		return Mono.just(new ResponseEntity<>(HttpStatus.OK));
 	}
 }
