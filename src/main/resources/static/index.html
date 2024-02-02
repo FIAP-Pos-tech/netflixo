@@ -30,7 +30,7 @@
     <h2>Netflixo papai</h2>
     <div class="row">
         <div class="col-md-6">
-            <video src="videos/MUSICA-NETFLIX" width="100%" height="440px" controls></video>
+            <video src="videos/27a20297-32ec-4021-b112-8e022bcd00b9" width="100%" height="440px" controls></video>
         </div>
     </div>
 
@@ -106,7 +106,7 @@
         var file = document.getElementById('videoFile').files[0];
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('fileName', data.id);
+        formData.append('fileName', data.id + '.mp4');
         fetch('videos/upload', {
             method: 'POST',
             body: formData
