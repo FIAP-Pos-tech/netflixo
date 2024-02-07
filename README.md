@@ -6,6 +6,10 @@ Uma aplicação web de streaming de vídeos desenvolvida utilizando as tecnologi
 Ao adotar o Spring WebFlux em nosso projeto, abraçamos a abordagem da programação reativa, que permite lidar com a concorrência e a eficiência de forma mais flexível e responsiva. Utilizamos ainda o Google Cloud Storage para fazer o upload dos vídeos. Assim, ao receber os vídeos, implementamos uma estratégia inovadora: quebramos o conteúdo em chunks, transformando o processo de download em uma experiência de streaming dinâmica. Essa abordagem não apenas otimiza a transferência de dados, mas também possibilita uma entrega contínua e assíncrona aos usuários finais.
 A aplicação, por sua vez, permite o gerenciamento e a exibição de vídeos, com informações como categoria, título e descrição.
 
+## Link do vídeo: 
+https://drive.google.com/drive/folders/16PtczcfySJx7WQxzKooMSzqTZ6euJcZI?usp=sharing
+
+
 ## Requisitos Funcionais
 
 1. **Criação e listagem .**
